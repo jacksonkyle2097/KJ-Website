@@ -47,36 +47,41 @@
       <div class="details">
         <div class="detail">
           <span class="label">Helpful to include</span>
-          <span class="muted">The site address, any architectural drawings and photos of the existing structure.</span>
+          <span class="muted">The site address, any architectural drawings and photos of the existing structure. You can attach these to your enquiry, up to 10 MB in total.</span>
         </div>
       </div>
 
       <div class="form-card">
-        <form id="enquiry" novalidate>
+        <form id="enquiry" action="https://formsubmit.co/jackson.kyle2097@gmail.com" method="POST" enctype="multipart/form-data" novalidate>
+          <input type="hidden" name="_subject" id="f-subject">
+          <input type="hidden" name="_replyto" id="f-replyto">
+          <input type="hidden" name="_next" id="f-next">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
           <div class="pair">
             <div class="field">
               <label for="name">Name</label>
-              <input id="name" name="name" autocomplete="name" required>
+              <input id="name" name="Name" autocomplete="name" required>
             </div>
             <div class="field">
               <label for="company">Company <span class="opt">(optional)</span></label>
-              <input id="company" name="company" autocomplete="organization">
+              <input id="company" name="Company" autocomplete="organization">
             </div>
           </div>
           <div class="pair">
             <div class="field">
               <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" required>
+              <input id="email" name="Email" type="email" autocomplete="email" required>
             </div>
             <div class="field">
               <label for="phone">Phone <span class="opt">(optional)</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel">
+              <input id="phone" name="Phone" type="tel" autocomplete="tel">
             </div>
           </div>
           <div class="pair">
             <div class="field">
               <label for="role">I am a</label>
-              <select id="role" name="role">
+              <select id="role" name="Role">
                 <option>Builder</option>
                 <option>Architect or designer</option>
                 <option>Homeowner</option>
@@ -86,12 +91,23 @@
             </div>
             <div class="field">
               <label for="suburb">Site suburb</label>
-              <input id="suburb" name="suburb" autocomplete="address-level2">
+              <input id="suburb" name="Site suburb" autocomplete="address-level2">
             </div>
           </div>
           <div class="field">
             <label for="message">Project details</label>
-            <textarea id="message" name="message" required placeholder="What's being built or changed, what stage it's at, and when you need structural drawings or an inspection."></textarea>
+            <textarea id="message" name="Details" required placeholder="What's being built or changed, what stage it's at, and when you need structural drawings or an inspection."></textarea>
+          </div>
+          <div class="field">
+            <span class="field-label">Documents <span class="opt">(optional)</span></span>
+            <label class="dropzone" id="dropzone" for="files">
+              <input class="visually-hidden" id="files" type="file" multiple
+                     accept=".pdf,.jpg,.jpeg,.png,.heic,.dwg,.dxf,.doc,.docx,.xls,.xlsx,.zip">
+              <span class="dz-title">Drag files here or <u>browse</u></span>
+              <span class="dz-hint">Drawings, photos or reports. PDF, images, DWG, Word, Excel or ZIP. Up to 5 files, 10 MB in total.</span>
+            </label>
+            <ul class="file-list" id="file-list" hidden></ul>
+            <div id="attachments" hidden></div>
           </div>
           <div class="honey" aria-hidden="true">
             <label for="website">Leave this empty</label>
@@ -141,8 +157,7 @@
 
 <script>
 (function () {
-  // Enquiries are delivered by FormSubmit (formsubmit.co) to this address.
-  var ENDPOINT = "https://formsubmit.co/ajax/jackson.kyle2097@gmail.com";
+  // Enquiries are delivered by FormSubmit (formsubmit.co); see the form's action attribute.
   var FALLBACK = "jackson.kyle2097@gmail.com";
 
   document.querySelectorAll("[data-copy]").forEach(function (btn) {
@@ -166,49 +181,106 @@
   var msg = document.getElementById("form-msg");
   var sent = document.getElementById("sent");
   var send = document.getElementById("send");
+  var val = function (id) { return document.getElementById(id).value.trim(); };
 
   function fail(text) { msg.textContent = text; msg.className = "form-msg error"; }
 
+  // FormSubmit redirects back here with ?sent=1 once the enquiry is delivered.
+  if (/[?&]sent=1\b/.test(location.search)) {
+    form.hidden = true;
+    sent.hidden = false;
+    history.replaceState(null, "", location.pathname);
+  }
+  // Re-enable the button if the visitor comes back to this page with the browser's Back button.
+  window.addEventListener("pageshow", function () { send.disabled = false; msg.textContent = ""; });
+
+  // Attachments: FormSubmit takes up to 10 MB in total, sent as a normal multipart form post.
+  var MAX_BYTES = 10 * 1024 * 1024;
+  var MAX_FILES = 5;
+  var picker = document.getElementById("files");
+  var zone = document.getElementById("dropzone");
+  var list = document.getElementById("file-list");
+  var holder = document.getElementById("attachments");
+  var chosen = [];
+  var canManage = (function () { try { return !!new DataTransfer().items; } catch (e) { return false; } })();
+
+  function size(n) { return n < 1048576 ? Math.max(1, Math.round(n / 1024)) + " KB" : (n / 1048576).toFixed(1) + " MB"; }
+  function total(files) { var t = 0; for (var i = 0; i < files.length; i++) t += files[i].size; return t; }
+
+  function render() {
+    list.textContent = "";
+    chosen.forEach(function (f, i) {
+      var li = document.createElement("li");
+      var name = document.createElement("span");
+      name.className = "file-name"; name.textContent = f.name; name.title = f.name;
+      var sz = document.createElement("span");
+      sz.className = "file-size"; sz.textContent = size(f.size);
+      var rm = document.createElement("button");
+      rm.type = "button"; rm.className = "copy"; rm.textContent = "Remove";
+      rm.setAttribute("aria-label", "Remove " + f.name);
+      rm.addEventListener("click", function () { chosen.splice(i, 1); render(); });
+      li.append(name, sz, rm);
+      list.appendChild(li);
+    });
+    list.hidden = !chosen.length;
+  }
+
+  function add(files) {
+    msg.textContent = ""; msg.className = "form-msg";
+    for (var i = 0; i < files.length; i++) {
+      var f = files[i];
+      if (chosen.some(function (c) { return c.name === f.name && c.size === f.size; })) continue;
+      if (chosen.length >= MAX_FILES) { fail("You can attach up to " + MAX_FILES + " files."); break; }
+      if (total(chosen) + f.size > MAX_BYTES) { fail(f.name + " would take attachments over 10 MB. Email larger files to " + FALLBACK + "."); continue; }
+      chosen.push(f);
+    }
+    render();
+  }
+
+  if (canManage) {
+    picker.addEventListener("change", function () { add(picker.files); picker.value = ""; });
+    ["dragenter", "dragover"].forEach(function (t) {
+      zone.addEventListener(t, function (e) { e.preventDefault(); zone.classList.add("dragging"); });
+    });
+    ["dragleave", "drop"].forEach(function (t) {
+      zone.addEventListener(t, function () { zone.classList.remove("dragging"); });
+    });
+    zone.addEventListener("drop", function (e) { e.preventDefault(); add(e.dataTransfer.files); });
+  } else {
+    // Older browsers: submit the picker's own selection as-is.
+    picker.name = "attachment";
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var name = form.name.value.trim();
-    var email = form.email.value.trim();
-    var details = form.message.value.trim();
+    var name = val("name");
+    var email = val("email");
+    var details = val("message");
     if (!name || !email || !details) return fail("Add your name, email and a few project details.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Check the email address. It should look like name@example.com.");
-    if (form._honey.value) return;
+    if (!canManage && total(picker.files) > MAX_BYTES) return fail("Attachments can be up to 10 MB in total. Email larger files to " + FALLBACK + ".");
+    if (document.getElementById("website").value) return;
 
-    msg.textContent = "Sending…"; msg.className = "form-msg";
+    document.getElementById("f-subject").value = "Website enquiry: " + name + " (" + val("role") + ")";
+    document.getElementById("f-replyto").value = email;
+    document.getElementById("f-next").value = location.href.split(/[?#]/)[0] + "?sent=1";
+
+    // One file input per attachment so each arrives as its own attachment.
+    holder.textContent = "";
+    chosen.forEach(function (f, i) {
+      var input = document.createElement("input");
+      var dt = new DataTransfer();
+      dt.items.add(f);
+      input.type = "file";
+      input.name = "attachment" + (i + 1);
+      input.files = dt.files;
+      holder.appendChild(input);
+    });
+
+    msg.textContent = chosen.length ? "Uploading and sending…" : "Sending…";
+    msg.className = "form-msg";
     send.disabled = true;
-
-    fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({
-        _subject: "Website enquiry: " + name + " (" + form.role.value + ")",
-        _template: "table",
-        _replyto: email,
-        Name: name,
-        Company: form.company.value.trim(),
-        Email: email,
-        Phone: form.phone.value.trim(),
-        Role: form.role.value,
-        "Site suburb": form.suburb.value.trim(),
-        Details: details
-      })
-    })
-      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function (data) {
-        if (String(data.success) !== "true") throw new Error(data.message || "not sent");
-        form.hidden = true;
-        sent.hidden = false;
-      })
-      .catch(function (err) {
-        // FormSubmit explains failures (e.g. form not yet activated) in its message; log it for diagnosis.
-        console.warn("Enquiry not sent:", err && err.message);
-        send.disabled = false;
-        fail("Your enquiry couldn't be sent from this page. Please email " + FALLBACK + " directly.");
-      });
+    HTMLFormElement.prototype.submit.call(form);
   });
 })();
 </script>

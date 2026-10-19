@@ -278,8 +278,8 @@ h3 { font-size: 1.08rem; letter-spacing: 0; }
 form { display: grid; gap: 18px; }
 .field { display: grid; gap: 6px; min-width: 0; }
 .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-label { font-size: 0.88rem; font-weight: 600; color: var(--ink); }
-label .opt { font-weight: 400; color: var(--ink-soft); }
+label, .field-label { font-size: 0.88rem; font-weight: 600; color: var(--ink); }
+label .opt, .field-label .opt { font-weight: 400; color: var(--ink-soft); }
 input, select, textarea {
   font: inherit;
   color: var(--ink);
@@ -291,6 +291,28 @@ input, select, textarea {
 }
 input:hover, select:hover, textarea:hover { border-color: var(--ink-soft); }
 textarea { min-height: 150px; resize: vertical; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.dropzone {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 22px 16px;
+  border: 1px dashed var(--ink-soft);
+  border-radius: 2px;
+  background: var(--band);
+  text-align: center;
+  cursor: pointer;
+}
+.dropzone:hover, .dropzone.dragging { border-color: var(--brand); background: var(--brand-soft); }
+.dropzone:focus-within { outline: 2px solid var(--brand); outline-offset: 3px; }
+.dz-title { font-size: 0.95rem; font-weight: 600; }
+.dz-title u { color: var(--brand); text-underline-offset: 3px; }
+.dz-hint { font-size: 0.82rem; font-weight: 400; color: var(--ink-soft); }
+.file-list { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; }
+.file-list li { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border: 1px solid var(--rule); font-size: 0.9rem; }
+.file-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-size { flex: none; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .honey { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form-foot { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
 .form-msg { font-size: 0.95rem; }

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact | KJ Engineering &amp; Consulting, Structural Engineer Illawarra</title>
+<meta name="description" content="Contact Kyle Jackson CPEng, chartered structural engineer in the Illawarra. Send your project details for structural design, inspections or certification.">
+<meta name="theme-color" content="#7a0000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header over-hero">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="images/kj-logo.png" width="539" height="175" alt="KJ Engineering &amp; Consulting Pty. Ltd.">
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <a class="link" href="index.html">Home</a>
+      <a class="link" href="index.html#services">Services</a>
+      <a class="link" href="contact.html" aria-current="page">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero short" aria-labelledby="contact-title">
+    <img src="images/steel-frame-2000.jpg"
+         srcset="images/steel-frame-1100.jpg 1100w, images/steel-frame-2000.jpg 2000w"
+         sizes="100vw" width="2000" height="1333" alt="">
+    <div class="hero-band">
+      <div class="wrap">
+        <h1 id="contact-title">Contact</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="touch-title">
+    <div class="wrap">
+      <div class="contact-intro">
+        <h2 class="section-title" id="touch-title">Get in touch</h2>
+      </div>
+      <div class="contact-grid">
+      <div class="details">
+        <div class="detail">
+          <span class="label">Helpful to include</span>
+          <span class="muted">The site address, any architectural drawings and photos of the existing structure.</span>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <form id="enquiry" novalidate>
+          <div class="pair">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="company">Company <span class="opt">(optional)</span></label>
+              <input id="company" name="company" autocomplete="organization">
+            </div>
+          </div>
+          <div class="pair">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="opt">(optional)</span></label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel">
+            </div>
+          </div>
+          <div class="pair">
+            <div class="field">
+              <label for="role">I am a</label>
+              <select id="role" name="role">
+                <option>Builder</option>
+                <option>Architect or designer</option>
+                <option>Homeowner</option>
+                <option>Developer</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="suburb">Site suburb</label>
+              <input id="suburb" name="suburb" autocomplete="address-level2">
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Project details</label>
+            <textarea id="message" name="message" required placeholder="What's being built or changed, what stage it's at, and when you need structural drawings or an inspection."></textarea>
+          </div>
+          <div class="honey" aria-hidden="true">
+            <label for="website">Leave this empty</label>
+            <input id="website" name="_honey" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="form-foot">
+            <button class="btn" type="submit" id="send">Send enquiry</button>
+            <span class="form-msg" id="form-msg" role="status"></span>
+          </div>
+          <p class="privacy">Your details are used only to respond to your enquiry and are never shared.</p>
+        </form>
+        <p class="status" id="sent" hidden>Thanks, your enquiry has been sent. I'll be in touch soon to talk through your project.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div>
+        <img class="foot-logo" src="images/kj-logo-white.png" width="539" height="175" alt="KJ Engineering &amp; Consulting Pty. Ltd.">
+        <p>Structural engineering for the Illawarra.<br>ABN 81 686 082 744</p>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <ul>
+          <li><a href="mailto:jackson.kyle2097@gmail.com">jackson.kyle2097@gmail.com</a></li>
+          <li>Wollongong, NSW</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Pages</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>© 2026 KJ Engineering &amp; Consulting Pty. Ltd.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Enquiries are delivered by FormSubmit (formsubmit.co) to this address.
+  var ENDPOINT = "https://formsubmit.co/ajax/jackson.kyle2097@gmail.com";
+  var FALLBACK = "jackson.kyle2097@gmail.com";
+
+  document.querySelectorAll("[data-copy]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var el = document.getElementById(btn.dataset.copy);
+      var text = el.textContent.trim();
+      var original = btn.textContent;
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      var sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      Promise.resolve()
+        .then(function () { return navigator.clipboard.writeText(text); })
+        .then(function () { btn.textContent = "Copied"; })
+        .catch(function () { btn.textContent = "Selected"; })
+        .finally(function () { setTimeout(function () { btn.textContent = original; }, 1800); });
+    });
+  });
+
+  var form = document.getElementById("enquiry");
+  var msg = document.getElementById("form-msg");
+  var sent = document.getElementById("sent");
+  var send = document.getElementById("send");
+
+  function fail(text) { msg.textContent = text; msg.className = "form-msg error"; }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = form.name.value.trim();
+    var email = form.email.value.trim();
+    var details = form.message.value.trim();
+    if (!name || !email || !details) return fail("Add your name, email and a few project details.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Check the email address. It should look like name@example.com.");
+    if (form._honey.value) return;
+
+    msg.textContent = "Sending…"; msg.className = "form-msg";
+    send.disabled = true;
+
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        _subject: "Website enquiry: " + name + " (" + form.role.value + ")",
+        _template: "table",
+        _replyto: email,
+        Name: name,
+        Company: form.company.value.trim(),
+        Email: email,
+        Phone: form.phone.value.trim(),
+        Role: form.role.value,
+        "Site suburb": form.suburb.value.trim(),
+        Details: details
+      })
+    })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (data) {
+        if (String(data.success) !== "true") throw new Error("not sent");
+        form.hidden = true;
+        sent.hidden = false;
+      })
+      .catch(function () {
+        send.disabled = false;
+        fail("Your enquiry couldn't be sent from this page. Please email " + FALLBACK + " directly.");
+      });
+  });
+})();
+</script>
+</body>
+</html>

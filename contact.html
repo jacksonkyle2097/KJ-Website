@@ -199,11 +199,13 @@
     })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (data) {
-        if (String(data.success) !== "true") throw new Error("not sent");
+        if (String(data.success) !== "true") throw new Error(data.message || "not sent");
         form.hidden = true;
         sent.hidden = false;
       })
-      .catch(function () {
+      .catch(function (err) {
+        // FormSubmit explains failures (e.g. form not yet activated) in its message; log it for diagnosis.
+        console.warn("Enquiry not sent:", err && err.message);
         send.disabled = false;
         fail("Your enquiry couldn't be sent from this page. Please email " + FALLBACK + " directly.");
       });
